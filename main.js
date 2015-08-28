@@ -34,15 +34,15 @@ var decodedPrivateKey = ECPrivateKey.decode(encodedPrivateKey, 'pem', options)
  * OpenSSL Private Key
  ******/
 
-var encodedPrivateKey3 = '-----BEGIN EC PRIVATE KEY-----\n' +
+var openSSLEncodedPrivateKey = '-----BEGIN EC PRIVATE KEY-----\n' +
 'MHQCAQEEIIRAVcyhPv14znmkw6TFq6XbDr63rp1WkGwD0zPFZo1boAcGBSuBBAAK\n' +
 'oUQDQgAEFHt56eHdMyTO6hFf9AN7bId8c3dxMUGL+ytxPv/Q9QIye5I4YVgb1VNe\n' +
 '6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==\n' +
 '-----END EC PRIVATE KEY-----'
-var decodedPrivateKey3 = ECPrivateKey.decode(encodedPrivateKey3, 'pem', options)
-var decodedHexPrivateKey = decodedPrivateKey3.privateKey.toString('hex')
-var decodedHexPublicKey = decodedPrivateKey3.publicKey.data.toString('hex')
-var reencodedPrivateKey3 = ECPrivateKey.encode(decodedPrivateKey3, 'pem', options)
+var openSSLDecodedPrivateKey = ECPrivateKey.decode(openSSLEncodedPrivateKey, 'pem', options)
+var openSSLReencodedPrivateKey = ECPrivateKey.encode(openSSLDecodedPrivateKey, 'pem', options)
+var openSSLDecodedPrivateKeyHex = openSSLDecodedPrivateKey.privateKey.toString('hex')
+var openSSLDecodedPublicKeyHex = openSSLDecodedPrivateKey.publicKey.data.toString('hex')
 
 /******
  * Printing
@@ -56,10 +56,10 @@ console.log(decodedPrivateKey)
 
 console.log('\n\n**************\nOpenSSL Private Key\n**************')
 console.log('\nDecoded private key:')
-console.log(decodedPrivateKey3)
+console.log(openSSLDecodedPrivateKey)
 console.log('\nDecoded private Key (Hex):')
-console.log(decodedHexPrivateKey)
+console.log(openSSLDecodedPrivateKeyHex)
 console.log('\nDecoded public key (Hex):')
-console.log(decodedHexPublicKey)
+console.log(openSSLDecodedPublicKeyHex)
 console.log('\nRe-encoded private key:')
-console.log(reencodedPrivateKey3)
+console.log(openSSLReencodedPrivateKey)
