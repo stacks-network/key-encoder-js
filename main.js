@@ -1,7 +1,3 @@
-/******
- * Private Key PEM Encoding and Decoding
- ******/
-
 var asn1 = require('asn1.js'),
     BN = require('bn.js'),
     EC = require('elliptic').ec
