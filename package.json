@@ -1,0 +1,33 @@
+{
+  "name": "elliptic-asn1",
+  "version": "1.0.0",
+  "description": "library for PEM encoding ecdsa private keys",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shea256/elliptic-asn1.git"
+  },
+  "keywords": [
+    "elliptic",
+    "asn",
+    "pem",
+    "ecdsa",
+    "cryptography",
+    "private",
+    "key"
+  ],
+  "author": "Ryan Shea",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shea256/elliptic-asn1/issues"
+  },
+  "homepage": "https://github.com/shea256/elliptic-asn1",
+  "dependencies": {
+    "asn1.js": "^2.2.0",
+    "bn.js": "^3.1.2",
+    "elliptic": "^5.1.0"
+  }
+}
