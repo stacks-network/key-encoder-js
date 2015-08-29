@@ -1,6 +1,6 @@
-# PEM And DER Encoder and Decoder for ECDSA Private Keys
+# ECDSA Private Key Encoder and Decoder
 
-### Encoding Private Keys
+### Encoding Private Keys to PEM Format
 
 ```js
 var ECPrivateKey = require('ecdsa-key-encoder').ECPrivateKey,
@@ -20,7 +20,7 @@ var privateKeyObject = {
 var privateKeyPEM = ECPrivateKey.encode(privateKeyObject, 'pem', pemOptions)
 ```
 
-### Decoding Private Keys
+### Decoding PEM Private Keys
 
 ```js
 var decodedPrivateKeyObject = ECPrivateKey.decode(privateKeyPEM, 'pem', pemOptions)
