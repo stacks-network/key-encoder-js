@@ -8,7 +8,7 @@ var asn1 = require('asn1.js'),
 
 var ECPrivateKey = asn1.define('ECPrivateKey', function() {
   this.seq().obj(
-    this.key('version').int().def(new BN(1)),
+    this.key('version').int(),
     this.key('privateKey').octstr(),
     this.key('parameters').explicit(0).objid().optional(),
     this.key('publicKey').explicit(1).bitstr().optional()
@@ -24,6 +24,7 @@ var publicKeyHex = '04147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713eff
     options =  {label: 'EC PRIVATE KEY'}
 var publicKeyBitstr = { data: new Buffer(publicKeyHex, 'hex'), unused: 0 }
 var encodedPrivateKey = ECPrivateKey.encode({
+    version: new BN(1),
     privateKey: new Buffer(privateKeyHex, 'hex'),
     parameters: '1.3.132.0.10'.split('.'),
     publicKey: publicKeyBitstr
@@ -55,6 +56,8 @@ console.log('\nDecoded private key:')
 console.log(decodedPrivateKey)
 
 console.log('\n\n**************\nOpenSSL Private Key\n**************')
+console.log('\nOriginal encoded private key:')
+console.log(openSSLEncodedPrivateKey)
 console.log('\nDecoded private key:')
 console.log(openSSLDecodedPrivateKey)
 console.log('\nDecoded private Key (Hex):')
