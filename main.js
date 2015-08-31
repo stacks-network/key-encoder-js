@@ -2,20 +2,32 @@ var asn1 = require('asn1.js'),
     BN = require('bn.js')
 
 var ECPrivateKeyASN = asn1.define('ECPrivateKey', function() {
-  this.seq().obj(
-    this.key('version').int(),
-    this.key('privateKey').octstr(),
-    this.key('parameters').explicit(0).objid().optional(),
-    this.key('publicKey').explicit(1).bitstr().optional()
-  )
+    this.seq().obj(
+        this.key('version').int(),
+        this.key('privateKey').octstr(),
+        this.key('parameters').explicit(0).objid().optional(),
+        this.key('publicKey').explicit(1).bitstr().optional()
+    )
 })
 
-function EllipticCurve(parameters) {
-    this.parameters = parameters
-    this.pemOptions = {label: 'EC PRIVATE KEY'}
+var SubjectPublicKeyInfoASN = asn1.define('SubjectPublicKeyInfo', function() {
+    this.seq().obj(
+        this.key('algorithm').seq().obj(
+            this.key("id").objid(),
+            this.key("curve").objid()
+        ),
+        this.key('pub').bitstr()
+    )
+})
+
+function KeyEncoder(curveParameters) {
+    this.parameters = curveParameters
+    this.privatePEMOptions = {label: 'EC PRIVATE KEY'}
+    this.publicPEMOptions = {label: 'PUBLIC KEY'}
+    this.algorithmID = [1, 2, 840, 10045, 2, 1]
 }
 
-EllipticCurve.prototype.hexToPEM = function(privateKeyHex, hexPublicKey) {
+KeyEncoder.prototype.hexToPrivatePEM = function(privateKeyHex, hexPublicKey) {
     var privateKeyObject = {
         version: new BN(1),
         privateKey: new Buffer(privateKeyHex, 'hex'),
@@ -29,18 +41,39 @@ EllipticCurve.prototype.hexToPEM = function(privateKeyHex, hexPublicKey) {
         }
     }
 
-    return ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.pemOptions)
+    return ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.privatePEMOptions)
 }
 
-EllipticCurve.prototype.PEMToHex = function(privateKeyPEM) {
-    var privateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'pem', this.pemOptions)
+KeyEncoder.prototype.privatePEMToHex = function(privateKeyPEM) {
+    var privateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'pem', this.privatePEMOptions)
     return privateKeyObject.privateKey.toString('hex');
+}
+
+KeyEncoder.prototype.hexToPublicPEM = function(publicKeyHex) {
+    var publicKeyObject = {
+        algorithm: {
+            id: this.algorithmID,
+            curve: this.parameters
+        },
+        pub: {
+            unused: 0,
+            data: new Buffer(publicKeyHex, 'hex')
+        }
+    }
+
+    return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'pem', this.publicPEMOptions)
+}
+
+KeyEncoder.prototype.publicPEMToHex = function(publicKeyPEM) {
+    var publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKeyPEM, 'pem', this.publicPEMOptions)
+    return publicKeyObject.pub.data.toString('hex')
 }
 
 SECP256k1Parameters = [1, 3, 132, 0, 10]
 
 module.exports = {
     ECPrivateKeyASN: ECPrivateKeyASN,
-    EllipticCurve: EllipticCurve,
+    SubjectPublicKeyInfoASN: SubjectPublicKeyInfoASN,
+    KeyEncoder: KeyEncoder,
     SECP256k1Parameters: SECP256k1Parameters
 }
