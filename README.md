@@ -28,17 +28,17 @@ var ellipticCurve = new EllipticCurve(SECP256k1Parameters),
 #### Encoding PEM Private Keys
 
 ```js
-> ellipticCurve.hexToPEM(privateKeyHex, publicKeyHex)
+ellipticCurve.hexToPEM(privateKeyHex, publicKeyHex)
 ```
 
 *Note that including the public key hex is recommended but optional. Excluding it will result in a more compact PEM:*
 
 ```js
-> ellipticCurve.hexToPEM(privateKeyHex)
+ellipticCurve.hexToPEM(privateKeyHex)
 ```
 
 #### Decoding PEM Private Keys
 
 ```js
-> ellipticCurve.PEMToHex(privateKeyPEM)
+ellipticCurve.PEMToHex(privateKeyPEM)
 ```
