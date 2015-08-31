@@ -1,12 +1,12 @@
 # ECDSA Key Encoder and Decoder
 
-#### Installation
+### Installation
 
 ```
 $ npm install ecdsa-key-encoder
 ```
 
-#### Getting Started
+### Getting Started
 
 First, import the necessary modules and classes:
 
@@ -25,20 +25,20 @@ var ellipticCurve = new EllipticCurve(SECP256k1Parameters),
 
 *Note that the parameters for SECP256k1 (`[1, 3, 132, 0, 10]`) are already provided but you can pass your own in for any curve you'd like.*
 
-#### Encoding PEM Private Keys
+### Encoding PEM Private Keys
 
 ```js
-ellipticCurve.hexToPEM(privateKeyHex, publicKeyHex)
+var privateKeyPEM = ellipticCurve.hexToPEM(privateKeyHex, publicKeyHex)
 ```
 
 *Note that including the public key hex is recommended but optional. Excluding it will result in a more compact PEM:*
 
 ```js
-ellipticCurve.hexToPEM(privateKeyHex)
+var privateKeyPEMCompact = ellipticCurve.hexToPEM(privateKeyHex)
 ```
 
-#### Decoding PEM Private Keys
+### Decoding PEM Private Keys
 
 ```js
-ellipticCurve.PEMToHex(privateKeyPEM)
+var decodedPrivateKeyHex = ellipticCurve.PEMToHex(privateKeyPEM)
 ```
