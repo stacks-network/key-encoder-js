@@ -1,8 +1,8 @@
-# ECDSA Private Key Encoder and Decoder
+# ECDSA Key Encoder and Decoder
 
 ## SECP256k1 Private Keys
 
-### Encoding Hex Private Keys to PEM Format
+#### Encoding Hex Private Keys to PEM Format
 
 ```js
 var SECP256k1PrivateKey = require('ecdsa-key-encoder').SECP256k1PrivateKey,
@@ -12,7 +12,7 @@ var SECP256k1PrivateKey = require('ecdsa-key-encoder').SECP256k1PrivateKey,
 var privateKeyPEM = SECP256k1PrivateKey.hexToPEM(privateKeyHex, publicKeyHex)
 ```
 
-### Decoding PEM Private Keys to Hex Format
+#### Decoding PEM Private Keys to Hex Format
 
 ```js
 var decodedPrivateKeyHex = SECP256k1PrivateKey.PEMToHex(privateKeyPEM)
@@ -20,7 +20,7 @@ var decodedPrivateKeyHex = SECP256k1PrivateKey.PEMToHex(privateKeyPEM)
 
 ## Arbitrary Private Keys
 
-### Encoding Hex Private Keys to PEM Format
+#### Encoding Hex Private Keys to PEM Format
 
 ```js
 var ECPrivateKey = require('ecdsa-key-encoder').ECPrivateKey,
@@ -39,7 +39,7 @@ var privateKeyObject = {
 var privateKeyPEM = ECPrivateKey.encode(privateKeyObject, 'pem', pemOptions)
 ```
 
-### Decoding PEM Private Keys to Hex Format
+#### Decoding PEM Private Keys to Hex Format
 
 ```js
 var decodedPrivateKeyObject = ECPrivateKey.decode(privateKeyPEM, 'pem', pemOptions)
