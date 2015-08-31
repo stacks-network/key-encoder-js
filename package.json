@@ -1,6 +1,6 @@
 {
   "name": "ecdsa-key-encoder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "library for encoding and decoding ecdsa private keys between PEM, DER and raw hex formats",
   "main": "main.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "bitcoin",
     "curve"
   ],
-  "author": "Ryan Shea",
+  "author": "Halfmoon Labs, Inc.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/blockstack/ecdsa-key-encoder/issues"
