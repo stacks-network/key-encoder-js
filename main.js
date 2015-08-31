@@ -1,8 +1,7 @@
 var asn1 = require('asn1.js'),
-    BN = require('bn.js'),
-    EC = require('elliptic').ec
+    BN = require('bn.js')
 
-var ECPrivateKey = asn1.define('ECPrivateKey', function() {
+var ECPrivateKeyASN = asn1.define('ECPrivateKey', function() {
   this.seq().obj(
     this.key('version').int(),
     this.key('privateKey').octstr(),
@@ -11,14 +10,12 @@ var ECPrivateKey = asn1.define('ECPrivateKey', function() {
   )
 })
 
-function SECP256k1PrivateKey() {
+function EllipticCurve(parameters) {
+    this.parameters = parameters
+    this.pemOptions = {label: 'EC PRIVATE KEY'}
 }
 
-SECP256k1PrivateKey.ec = new EC('secp256k1')
-SECP256k1PrivateKey.parameters = [1, 3, 132, 0, 10]
-SECP256k1PrivateKey.pemOptions = {label: 'EC PRIVATE KEY'}
-
-SECP256k1PrivateKey.hexToPEM = function(privateKeyHex, hexPublicKey) {
+EllipticCurve.prototype.hexToPEM = function(privateKeyHex, hexPublicKey) {
     var privateKeyObject = {
         version: new BN(1),
         privateKey: new Buffer(privateKeyHex, 'hex'),
@@ -32,15 +29,18 @@ SECP256k1PrivateKey.hexToPEM = function(privateKeyHex, hexPublicKey) {
         }
     }
 
-    return ECPrivateKey.encode(privateKeyObject, 'pem', this.pemOptions)
+    return ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.pemOptions)
 }
 
-SECP256k1PrivateKey.PEMToHex = function(privateKeyPEM) {
-    var privateKeyObject = ECPrivateKey.decode(privateKeyPEM, 'pem', this.pemOptions)
+EllipticCurve.prototype.PEMToHex = function(privateKeyPEM) {
+    var privateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'pem', this.pemOptions)
     return privateKeyObject.privateKey.toString('hex');
 }
 
+SECP256k1Parameters = [1, 3, 132, 0, 10]
+
 module.exports = {
-    ECPrivateKey: ECPrivateKey,
-    SECP256k1PrivateKey: SECP256k1PrivateKey
+    ECPrivateKeyASN: ECPrivateKeyASN,
+    EllipticCurve: EllipticCurve,
+    SECP256k1Parameters: SECP256k1Parameters
 }

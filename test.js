@@ -1,7 +1,8 @@
 var test = require('tape'),
     main = require('./main'),
-    ECPrivateKey = main.ECPrivateKey,
-    SECP256k1PrivateKey = main.SECP256k1PrivateKey,
+    ECPrivateKeyASN = main.ECPrivateKeyASN,
+    EllipticCurve = main.EllipticCurve,
+    SECP256k1Parameters = main.SECP256k1Parameters,
     BN = require('bn.js')
 
 var privateKeyHex = '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5b',
@@ -28,25 +29,27 @@ test('testECPrivateKey', function(t) {
         publicKey: { unused: 0, data: new Buffer(publicKeyHex, 'hex') }
     }
 
-    var privateKeyPEM = ECPrivateKey.encode(privateKeyObject, 'pem', pemOptions)
+    var privateKeyPEM = ECPrivateKeyASN.encode(privateKeyObject, 'pem', pemOptions)
     t.equal(privateKeyPEM, openSSLPrivateKeyPEM)
 
-    var decodedPrivateKeyObject = ECPrivateKey.decode(privateKeyPEM, 'pem', pemOptions)
+    var decodedPrivateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'pem', pemOptions)
     t.equal(JSON.stringify(privateKeyObject), JSON.stringify(decodedPrivateKeyObject))
 
-    var openSSLPrivateKeyObject = ECPrivateKey.decode(openSSLPrivateKeyPEM, 'pem', pemOptions)
+    var openSSLPrivateKeyObject = ECPrivateKeyASN.decode(openSSLPrivateKeyPEM, 'pem', pemOptions)
     t.equal(JSON.stringify(privateKeyObject), JSON.stringify(openSSLPrivateKeyObject))
 })
 
 test('testSECP256k1PrivateKey', function(t) {
     t.plan(3)
 
-    var privateKeyPEM = SECP256k1PrivateKey.hexToPEM(privateKeyHex, publicKeyHex)
+    var ellipticCurve = new EllipticCurve(SECP256k1Parameters)
+
+    var privateKeyPEM = ellipticCurve.hexToPEM(privateKeyHex, publicKeyHex)
     t.equal(privateKeyPEM, openSSLPrivateKeyPEM)
 
-    var privateKeyPEMCompact = SECP256k1PrivateKey.hexToPEM(privateKeyHex)
+    var privateKeyPEMCompact = ellipticCurve.hexToPEM(privateKeyHex)
     t.equal(privateKeyPEMCompact, openSSLPrivateKeyPEMCompact)
 
-    var decodedPrivateKeyHex = SECP256k1PrivateKey.PEMToHex(privateKeyPEM)
+    var decodedPrivateKeyHex = ellipticCurve.PEMToHex(privateKeyPEM)
     t.equal(decodedPrivateKeyHex, privateKeyHex)
 })
