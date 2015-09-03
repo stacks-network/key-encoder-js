@@ -1,4 +1,6 @@
-# ECDSA Key Encoder and Decoder
+# Key Encoder
+
+ECDSA key encoder and decoder
 
 ### Installation
 
