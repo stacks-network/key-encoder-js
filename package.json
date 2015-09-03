@@ -1,6 +1,6 @@
 {
   "name": "key-encoder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for encoding and decoding ecdsa private keys between PEM, DER and raw hex formats",
   "main": "main.js",
   "scripts": {
@@ -25,7 +25,11 @@
     "bitcoin",
     "curve"
   ],
-  "author": "Halfmoon Labs, Inc.",
+  "author": {
+    "name": "Halfmoon Labs, Inc.",
+    "email": "hello@onename.com",
+    "url": "https://onename.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/blockstack/key-encoder/issues"
