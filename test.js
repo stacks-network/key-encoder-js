@@ -66,7 +66,7 @@ test('testECPublicKey', function(t) {
 })
 
 test('testSECP256k1PrivateKey', function(t) {
-    t.plan(3)
+    t.plan(5)
 
     var keyEncoder = new KeyEncoder(SECP256k1Parameters)
 
@@ -78,10 +78,16 @@ test('testSECP256k1PrivateKey', function(t) {
 
     var decodedPrivateKeyHex = keyEncoder.privatePEMToHex(privateKeyPEM)
     t.equal(decodedPrivateKeyHex, privateKeyHex, 'encoded-and-decoded private key hex should match the original')
+
+    var privateKeyDER = keyEncoder.hexToPrivateDER(privateKeyHex, publicKeyHex)
+    t.ok(privateKeyDER, 'private key DER should be generated')
+
+    var decodedPrivateKeyHex2 = keyEncoder.privateDERToHex(privateKeyDER)
+    t.equal(decodedPrivateKeyHex2, decodedPrivateKeyHex, 'decoded private keys should be equal')
 })
 
 test('testSECP256k1PublicKey', function(t) {
-    t.plan(2)
+    t.plan(4)
 
     var keyEncoder = new KeyEncoder(SECP256k1Parameters)
 
@@ -90,4 +96,10 @@ test('testSECP256k1PublicKey', function(t) {
 
     var decodedPublicKeyHex = keyEncoder.publicPEMToHex(publicKeyPEM)
     t.equal(decodedPublicKeyHex, publicKeyHex, 'encoded-and-decoded public key hex should match the original')
+
+    var publicKeyDER = keyEncoder.hexToPublicDER(publicKeyHex)
+    t.ok(publicKeyDER, 'public key DER should be generated')
+
+    var decodedPublicKeyHex2 = keyEncoder.publicDERToHex(publicKeyDER)
+    t.equal(decodedPublicKeyHex2, decodedPublicKeyHex, 'decoded public keys should be equal')
 })

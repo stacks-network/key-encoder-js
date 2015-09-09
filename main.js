@@ -27,7 +27,7 @@ function KeyEncoder(curveParameters) {
     this.algorithmID = [1, 2, 840, 10045, 2, 1]
 }
 
-KeyEncoder.prototype.hexToPrivatePEM = function(privateKeyHex, hexPublicKey) {
+KeyEncoder.prototype.privateKeyObject = function(privateKeyHex, hexPublicKey) {
     var privateKeyObject = {
         version: new BN(1),
         privateKey: new Buffer(privateKeyHex, 'hex'),
@@ -41,16 +41,31 @@ KeyEncoder.prototype.hexToPrivatePEM = function(privateKeyHex, hexPublicKey) {
         }
     }
 
+    return privateKeyObject
+}
+
+KeyEncoder.prototype.hexToPrivatePEM = function(privateKeyHex, hexPublicKey) {
+    var privateKeyObject = this.privateKeyObject(privateKeyHex, hexPublicKey)
     return ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.privatePEMOptions)
+}
+
+KeyEncoder.prototype.hexToPrivateDER = function(privateKeyHex, hexPublicKey) {
+    var privateKeyObject = this.privateKeyObject(privateKeyHex, hexPublicKey)
+    return ECPrivateKeyASN.encode(privateKeyObject, 'der')
 }
 
 KeyEncoder.prototype.privatePEMToHex = function(privateKeyPEM) {
     var privateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'pem', this.privatePEMOptions)
-    return privateKeyObject.privateKey.toString('hex');
+    return privateKeyObject.privateKey.toString('hex')
 }
 
-KeyEncoder.prototype.hexToPublicPEM = function(publicKeyHex) {
-    var publicKeyObject = {
+KeyEncoder.prototype.privateDERToHex = function(privateKeyPEM) {
+    var privateKeyObject = ECPrivateKeyASN.decode(privateKeyPEM, 'der')
+    return privateKeyObject.privateKey.toString('hex')
+}
+
+KeyEncoder.prototype.publicKeyObject = function(publicKeyHex) {
+    return {
         algorithm: {
             id: this.algorithmID,
             curve: this.parameters
@@ -60,12 +75,25 @@ KeyEncoder.prototype.hexToPublicPEM = function(publicKeyHex) {
             data: new Buffer(publicKeyHex, 'hex')
         }
     }
+}
 
+KeyEncoder.prototype.hexToPublicPEM = function(publicKeyHex) {
+    var publicKeyObject = this.publicKeyObject(publicKeyHex)
     return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'pem', this.publicPEMOptions)
+}
+
+KeyEncoder.prototype.hexToPublicDER = function(publicKeyHex) {
+    var publicKeyObject = this.publicKeyObject(publicKeyHex)
+    return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'der')
 }
 
 KeyEncoder.prototype.publicPEMToHex = function(publicKeyPEM) {
     var publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKeyPEM, 'pem', this.publicPEMOptions)
+    return publicKeyObject.pub.data.toString('hex')
+}
+
+KeyEncoder.prototype.publicDERToHex = function(publicKeyDER) {
+    var publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKeyDER, 'der')
     return publicKeyObject.pub.data.toString('hex')
 }
 
