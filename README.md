@@ -1,5 +1,10 @@
 # Key Encoder
 
+[![npm](https://img.shields.io/npm/v/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
+[![npm](https://img.shields.io/npm/dm/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
+[![npm](https://img.shields.io/npm/l/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
+[![Slack](http://slack.blockstack.org/badge.svg)](http://slack.blockstack.org/)
+
 ECDSA key encoder and decoder
 
 ### Installation
