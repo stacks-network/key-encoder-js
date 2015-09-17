@@ -11,7 +11,7 @@ ECDSA key encoder and decoder
 ### Installation
 
 ```
-$ npm install ecdsa-key-encoder
+$ npm install key-encoder
 ```
 
 ### Getting Started
