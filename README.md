@@ -16,45 +16,96 @@ $ npm install key-encoder
 
 ### Getting Started
 
-To get started, first define your key encoder and hex private/public keys:
+To get started, first define your key encoder and raw private/public keys.
+
+Note that there is built in support for SECP256k1, but you can pass in your own curve parameters for any curve you'd like.
+
+#### SECP256k1 Key Encoders
 
 ```js
-var KeyEncoder = require('ecdsa-key-encoder').KeyEncoder,
-    SECP256k1Parameters = require('ecdsa-key-encoder').SECP256k1Parameters
-
-var keyEncoder = new KeyEncoder(SECP256k1Parameters),
-    privateKeyHex = '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5b',
-    publicKeyHex = '04147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75'
+var KeyEncoder = require('key-encoder'),
+    keyEncoder = new KeyEncoder('secp256k1')
 ```
 
-*Note that the parameters for SECP256k1 (`[1, 3, 132, 0, 10]`) are already provided but you can pass your own in for any curve you'd like.*
-
-### Encoding PEM Private Keys
+#### Key Encoders w/ Custom Curves
 
 ```js
-var privateKeyPEM = keyEncoder.hexToPrivatePEM(privateKeyHex, publicKeyHex)
+var EC = require('elliptic').ec
+var encoderOptions = {
+    curveParameters: [1, 3, 132, 0, 10],
+    privatePEMOptions: {label: 'EC PRIVATE KEY'},
+    publicPEMOptions: {label: 'PUBLIC KEY'},
+    curve: new EC('secp256k1')
+}
+var keyEncoder = new KeyEncoder(encoderOptions)
 ```
 
-*Note that including the public key hex is recommended but optional. Excluding it will result in a more compact PEM:*
+#### Declaring Raw Keys
 
 ```js
-var privateKeyPEMCompact = keyEncoder.hexToPrivatePEM(privateKeyHex)
+var rawPrivateKey = '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5b',
+    rawPublicKey = '04147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75'
 ```
 
-### Decoding PEM Private Keys
+### Encoding Private Keys
+
+Encode to and from raw, PEM, and DER formats.
+
+#### Encoding Private Keys as PEMs
 
 ```js
-var decodedPrivateKeyHex = keyEncoder.privatePEMToHex(privateKeyPEM)
+var pemPrivateKey = keyEncoder.encodePrivate(rawPrivateKey, 'raw', 'pem')
 ```
 
-### Encoding PEM Public Keys
+Example output:
 
-```js
-var publicKeyPEM = keyEncoder.hexToPublicPEM(publicKeyHex)
+```
+-----BEGIN EC PRIVATE KEY-----
+MHQCAQEEIIRAVcyhPv14znmkw6TFq6XbDr63rp1WkGwD0zPFZo1boAcGBSuBBAAK
+oUQDQgAEFHt56eHdMyTO6hFf9AN7bId8c3dxMUGL+ytxPv/Q9QIye5I4YVgb1VNe
+6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==
+-----END EC PRIVATE KEY-----
 ```
 
-### Decoding PEM Public Keys
+#### Encoding Private Keys to DER Format
 
 ```js
-var decodedPublicKeyHex = keyEncoder.publicPEMToHex(publicKeyPEM)
+var derPrivateKey = keyEncoder.encodePrivate(rawPrivateKey, 'raw', 'der')
+```
+
+Example output:
+
+```
+30740201010420844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5ba00706052b8104000aa14403420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75
+```
+
+### Encoding Public Keys
+
+Encode to and from raw, PEM, and DER formats.
+
+#### Encoding Public Keys as PEMs
+
+```js
+var pemPublicKey = keyEncoder.encodePublic(rawPublicKey, 'raw', 'pem')
+```
+
+Example output:
+
+```
+-----BEGIN PUBLIC KEY-----
+MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEFHt56eHdMyTO6hFf9AN7bId8c3dxMUGL
++ytxPv/Q9QIye5I4YVgb1VNe6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==
+-----END PUBLIC KEY-----
+```
+
+#### Encoding Public Keys to DER Format
+
+```js
+var derPublicKey = keyEncoder.encodePublic(rawPublicKey, 'raw', 'der')
+```
+
+Example output:
+
+```
+3056301006072a8648ce3d020106052b8104000a03420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75
 ```
