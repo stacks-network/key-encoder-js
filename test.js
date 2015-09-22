@@ -1,5 +1,5 @@
 var test = require('tape'),
-    KeyEncoder = require('./main'),
+    KeyEncoder = require('./index'),
     ECPrivateKeyASN = KeyEncoder.ECPrivateKeyASN,
     SubjectPublicKeyInfoASN = KeyEncoder.SubjectPublicKeyInfoASN,
     BN = require('bn.js')

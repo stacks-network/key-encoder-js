@@ -1,14 +1,14 @@
 {
   "name": "key-encoder",
-  "version": "1.1.0",
-  "description": "Library for encoding and decoding ecdsa private keys between PEM, DER and raw hex formats",
-  "main": "main.js",
+  "version": "1.1.1",
+  "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
+  "main": "index.js",
   "scripts": {
     "test": "node test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blockstack/key-encoder.git"
+    "url": "https://github.com/blockstack/key-encoder-js.git"
   },
   "keywords": [
     "elliptic",
@@ -32,9 +32,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blockstack/key-encoder/issues"
+    "url": "https://github.com/blockstack/key-encoder-js/issues"
   },
-  "homepage": "https://github.com/blockstack/key-encoder",
+  "homepage": "https://github.com/blockstack/key-encoder-js",
   "dependencies": {
     "asn1.js": "^2.2.0",
     "bn.js": "^3.1.2",
