@@ -1,4 +1,4 @@
-# Key Encoder
+# Key Encoder JS
 
 [![CircleCI](https://img.shields.io/circleci/project/blockstack/key-encoder-js.svg)](https://circleci.com/gh/blockstack/key-encoder-js)
 [![npm](https://img.shields.io/npm/l/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
