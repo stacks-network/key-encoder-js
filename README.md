@@ -1,6 +1,6 @@
 # Key Encoder
 
-[![CircleCI](https://img.shields.io/circleci/project/blockstack/key-encoder.svg)](https://circleci.com/gh/blockstack/key-encoder/tree/master)
+[![CircleCI](https://img.shields.io/circleci/project/blockstack/key-encoder-js.svg)](https://circleci.com/gh/blockstack/key-encoder-js)
 [![npm](https://img.shields.io/npm/l/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
 [![Slack](http://slack.blockstack.org/badge.svg)](http://slack.blockstack.org/)
 
