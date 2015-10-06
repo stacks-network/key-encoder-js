@@ -1,6 +1,6 @@
 {
   "name": "key-encoder",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
   "main": "index.js",
   "scripts": {
@@ -12,10 +12,12 @@
   },
   "keywords": [
     "elliptic",
+    "elliptic curve",
     "asn",
     "pem",
     "der",
     "ecdsa",
+    "crypto",
     "cryptography",
     "private",
     "key",
@@ -23,7 +25,21 @@
     "decode",
     "secp256k1",
     "bitcoin",
-    "curve"
+    "curve",
+    "private key",
+    "private keys",
+    "public key",
+    "public keys",
+    "keys",
+    "ecdsa key",
+    "ecdsa keys",
+    "key converter",
+    "convert keys",
+    "key format",
+    "key formatter",
+    "format keys",
+    "key encoder",
+    "encode keys"
   ],
   "author": {
     "name": "Halfmoon Labs, Inc.",
