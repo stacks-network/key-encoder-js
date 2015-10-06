@@ -6,8 +6,6 @@
 
 [![](https://nodei.co/npm/key-encoder.png?downloads=true)](https://www.npmjs.com/package/key-encoder)
 
-ECDSA key encoder and decoder
-
 ### Installation
 
 ```
@@ -18,14 +16,14 @@ $ npm install key-encoder
 
 To get started, first define your key encoder and raw private/public keys.
 
-Note that there is built in support for SECP256k1, but you can pass in your own curve parameters for any curve you'd like.
-
 #### SECP256k1 Key Encoders
 
 ```js
 var KeyEncoder = require('key-encoder'),
     keyEncoder = new KeyEncoder('secp256k1')
 ```
+
+As shown above, there is built in support for SECP256k1 (the curve Bitcoin uses), but you can pass in your own curve parameters for any curve you'd like.
 
 #### Key Encoders w/ Custom Curves
 
