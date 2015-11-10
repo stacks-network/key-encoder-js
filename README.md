@@ -2,9 +2,9 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/blockstack/key-encoder-js.svg)](https://circleci.com/gh/blockstack/key-encoder-js)
 [![npm](https://img.shields.io/npm/l/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
+[![npm](https://img.shields.io/npm/v/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
+[![npm](https://img.shields.io/npm/dm/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
 [![Slack](http://slack.blockstack.org/badge.svg)](http://slack.blockstack.org/)
-
-[![](https://nodei.co/npm/key-encoder.png?downloads=true)](https://www.npmjs.com/package/key-encoder)
 
 ### Installation
 
