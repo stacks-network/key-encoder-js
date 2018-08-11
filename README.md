@@ -14,7 +14,7 @@ $ npm install key-encoder
 
 ### Getting Started
 
-To get started, first define your key encoder and raw private/public keys.
+To get started, first define your key encoder and raw private/public keys. Keyencoder supports the following curves: `secp256k1`, `secp256r1`
 
 #### SECP256k1 Key Encoders
 
