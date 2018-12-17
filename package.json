@@ -4,7 +4,7 @@
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "nyc --reporter=text node test.js"
   },
   "repository": {
     "type": "git",
@@ -52,12 +52,13 @@
   },
   "homepage": "https://github.com/blockstack/key-encoder-js",
   "dependencies": {
-    "asn1.js": "^2.2.0",
-    "bn.js": "^3.1.2",
-    "elliptic": "^5.1.0"
+    "asn1.js": "^5.0.1",
+    "bn.js": "^4.11.8",
+    "elliptic": "^6.4.1"
   },
   "devDependencies": {
-    "tape": "^4.2.0"
+    "nyc": "^13.1.0",
+    "tape": "^4.9.1"
   },
   "files": [
     "lib/",
