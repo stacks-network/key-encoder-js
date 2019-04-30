@@ -7,7 +7,7 @@
     "compile": "tsc",
     "test": "nyc node ./src/test.ts",
     "codecovUpload": "codecov",
-    "prepublish": "npm run compile",
+    "prepublishOnly": "npm run compile",
     "prepare": "npm run compile"
   },
   "repository": {
