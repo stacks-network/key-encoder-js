@@ -53,7 +53,7 @@ interface PrivateKey {
     }
 }
 
-export class KeyEncoder {
+export default class KeyEncoder {
     static ECPrivateKeyASN = ECPrivateKeyASN
     static SubjectPublicKeyInfoASN = SubjectPublicKeyInfoASN
 
@@ -74,14 +74,14 @@ export class KeyEncoder {
     privateKeyObject(rawPrivateKey: string, rawPublicKey: string) {
         const privateKeyObject: PrivateKey = {
             version: new BN(1),
-            privateKey: new Buffer(rawPrivateKey, 'hex'),
+            privateKey: Buffer.from(rawPrivateKey, 'hex'),
             parameters: this.options.curveParameters
         }
 
         if (rawPublicKey) {
             privateKeyObject.publicKey = {
                 unused: 0,
-                data: new Buffer(rawPublicKey, 'hex')
+                data: Buffer.from(rawPublicKey, 'hex')
             }
         }
 
@@ -96,7 +96,7 @@ export class KeyEncoder {
             },
             pub: {
                 unused: 0,
-                data: new Buffer(rawPublicKey, 'hex')
+                data: Buffer.from(rawPublicKey, 'hex')
             }
         }
     }
@@ -116,7 +116,7 @@ export class KeyEncoder {
             if (typeof privateKey !== 'string') {
                 // do nothing
             } else if (typeof privateKey === 'string') {
-                privateKey = new Buffer(privateKey, 'hex')
+                privateKey = Buffer.from(privateKey, 'hex')
             } else {
                 throw 'private key must be a buffer or a string'
             }
@@ -155,7 +155,7 @@ export class KeyEncoder {
             if (typeof publicKey !== 'string') {
                 // do nothing
             } else if (typeof publicKey === 'string') {
-                publicKey = new Buffer(publicKey, 'hex')
+                publicKey = Buffer.from(publicKey, 'hex')
             } else {
                 throw 'public key must be a buffer or a string'
             }
