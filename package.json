@@ -89,7 +89,8 @@
     ],
     "exclude": [
       "**/*.d.ts",
-      "src/test.ts"
+      "src/test.ts",
+      "src/demo.ts"
     ],
     "require": [
       "ts-node/register/transpile-only",
