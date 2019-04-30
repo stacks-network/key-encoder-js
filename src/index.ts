@@ -1,3 +1,3 @@
-'use strict'
-
-module.exports = require('./lib/key-encoder')
+import * as keyEncoder from './key-encoder'
+export default keyEncoder
+export * from './key-encoder'

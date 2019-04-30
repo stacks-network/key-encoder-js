@@ -1,10 +1,11 @@
-var test = require('tape'),
-    KeyEncoder = require('./index'),
-    ECPrivateKeyASN = KeyEncoder.ECPrivateKeyASN,
-    SubjectPublicKeyInfoASN = KeyEncoder.SubjectPublicKeyInfoASN,
-    BN = require('bn.js')
+import test from 'tape'
+import BN from 'bn.js'
+import { KeyEncoder } from './index'
+const ECPrivateKeyASN = KeyEncoder.ECPrivateKeyASN
+const SubjectPublicKeyInfoASN = KeyEncoder.SubjectPublicKeyInfoASN
 
-var keys = {
+
+const keys = {
     rawPrivate: '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5b',
     rawPublic: '04147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75',
     pemPrivate: '-----BEGIN EC PRIVATE KEY-----\n' +
@@ -23,7 +24,7 @@ var keys = {
     derPublic: '3056301006072a8648ce3d020106052b8104000a03420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75'
 }
 
-var keyEncoder = new KeyEncoder('secp256k1')
+const keyEncoder = new KeyEncoder('secp256k1')
 
 test('encodeECPrivateKeyASN', function(t) {
     t.plan(3)
