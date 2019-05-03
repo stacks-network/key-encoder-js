@@ -53,6 +53,8 @@ interface PrivateKey {
     }
 }
 
+type KeyFormat = 'raw' | 'pem' | 'der';
+
 export default class KeyEncoder {
     static ECPrivateKeyASN = ECPrivateKeyASN
     static SubjectPublicKeyInfoASN = SubjectPublicKeyInfoASN
@@ -101,7 +103,7 @@ export default class KeyEncoder {
         }
     }
 
-    encodePrivate(privateKey: string | Buffer, originalFormat: string, destinationFormat: string) {
+    encodePrivate(privateKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat) {
         let privateKeyObject: PrivateKey
 
         /* Parse the incoming private key and convert it to a private key object */
@@ -142,7 +144,7 @@ export default class KeyEncoder {
         }
     }
 
-    encodePublic(publicKey: string | Buffer, originalFormat: string, destinationFormat: string) {
+    encodePublic(publicKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat) {
         let publicKeyObject
 
         /* Parse the incoming public key and convert it to a public key object */
