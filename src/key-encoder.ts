@@ -103,7 +103,7 @@ export default class KeyEncoder {
         }
     }
 
-    encodePrivate(privateKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat) {
+    encodePrivate(privateKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat): string {
         let privateKeyObject: PrivateKey
 
         /* Parse the incoming private key and convert it to a private key object */
@@ -144,7 +144,7 @@ export default class KeyEncoder {
         }
     }
 
-    encodePublic(publicKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat) {
+    encodePublic(publicKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat): string {
         let publicKeyObject
 
         /* Parse the incoming public key and convert it to a public key object */
