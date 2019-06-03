@@ -1,6 +1,6 @@
 {
   "name": "key-encoder",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
   "main": "lib/index.js",
   "scripts": {
