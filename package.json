@@ -1,10 +1,14 @@
 {
   "name": "key-encoder",
-  "version": "1.1.7",
+  "version": "2.0.0",
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "nyc --reporter=text node test.js"
+    "compile": "tsc",
+    "test": "nyc node ./src/test.ts",
+    "codecovUpload": "codecov",
+    "prepublishOnly": "npm run compile",
+    "prepare": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -57,12 +61,45 @@
     "elliptic": "^6.4.1"
   },
   "devDependencies": {
-    "nyc": "^13.1.0",
-    "tape": "^4.9.1"
+    "@types/elliptic": "^6.4.6",
+    "@types/node": "^10.14.6",
+    "@types/tape": "^4.2.33",
+    "codecov": "^3.3.0",
+    "istanbul": "^0.4.5",
+    "nyc": "^13.3.0",
+    "source-map-support": "^0.5.12",
+    "tape": "^4.10.1",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
   },
   "files": [
     "lib/",
+    "src/",
     "*.js",
     "README.md"
-  ]
+  ],
+  "nyc": {
+    "cache": false,
+    "all": true,
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "src/test.ts",
+      "src/demo.ts"
+    ],
+    "require": [
+      "ts-node/register/transpile-only",
+      "source-map-support/register"
+    ],
+    "reporter": [
+      "text",
+      "html",
+      "lcov"
+    ]
+  }
 }
