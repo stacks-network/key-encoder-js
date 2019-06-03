@@ -1,6 +1,6 @@
 {
   "name": "key-encoder",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
   "main": "lib/index.js",
   "scripts": {
@@ -64,13 +64,13 @@
     "@types/elliptic": "^6.4.6",
     "@types/node": "^10.14.6",
     "@types/tape": "^4.2.33",
-    "codecov": "^3.3.0",
+    "codecov": "^3.5.0",
     "istanbul": "^0.4.5",
     "nyc": "^14.1.1",
     "source-map-support": "^0.5.12",
     "tape": "^4.10.1",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5"
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.1"
   },
   "files": [
     "lib/",
@@ -98,7 +98,6 @@
     ],
     "reporter": [
       "text",
-      "html",
       "lcov"
     ]
   }

@@ -27,16 +27,14 @@ const keys = {
 const keyEncoder = new KeyEncoder('secp256k1')
 
 test('encodeECPrivateKeyASN', function(t) {
-    t.plan(3)
-
     var secp256k1Parameters = [1, 3, 132, 0, 10],
         pemOptions =  {label: 'EC PRIVATE KEY'}
 
     var privateKeyObject = {
         version: new BN(1),
-        privateKey: new Buffer(keys.rawPrivate, 'hex'),
+        privateKey: Buffer.from(keys.rawPrivate, 'hex'),
         parameters: secp256k1Parameters,
-        publicKey: { unused: 0, data: new Buffer(keys.rawPublic, 'hex') }
+        publicKey: { unused: 0, data: Buffer.from(keys.rawPublic, 'hex') }
     }
 
     var privateKeyPEM = ECPrivateKeyASN.encode(privateKeyObject, 'pem', pemOptions)
@@ -47,11 +45,10 @@ test('encodeECPrivateKeyASN', function(t) {
 
     var openSSLPrivateKeyObject = ECPrivateKeyASN.decode(keys.pemPrivate, 'pem', pemOptions)
     t.equal(JSON.stringify(privateKeyObject), JSON.stringify(openSSLPrivateKeyObject), 'private key object should match the one decoded from the OpenSSL PEM')
+    t.end()
 })
 
 test('encodeSubjectPublicKeyInfoASN', function(t) {
-    t.plan(1)
-
     var secp256k1Parameters = [1, 3, 132, 0, 10],
         pemOptions =  {label: 'PUBLIC KEY'}
 
@@ -62,70 +59,78 @@ test('encodeSubjectPublicKeyInfoASN', function(t) {
         },
         pub: {
             unused: 0,
-            data: new Buffer(keys.rawPublic, 'hex')
+            data: Buffer.from(keys.rawPublic, 'hex')
         }
     }
 
     var publicKeyPEM = SubjectPublicKeyInfoASN.encode(publicKeyObject, 'pem', pemOptions)
+    t.equal(typeof publicKeyPEM, "string")
     t.equal(publicKeyPEM, keys.pemPublic, 'encoded PEM public key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodeRawPrivateKey', function(t) {
-    t.plan(2)
-
     var privateKeyPEM = keyEncoder.encodePrivate(keys.rawPrivate, 'raw', 'pem')
+    t.equal(typeof privateKeyPEM, "string")
     t.equal(privateKeyPEM, keys.pemPrivate, 'encoded PEM private key should match the OpenSSL reference')
 
     var privateKeyDER = keyEncoder.encodePrivate(keys.rawPrivate, 'raw', 'der')
+    t.equal(typeof privateKeyDER, "string")
     t.equal(privateKeyDER, keys.derPrivate, 'encoded DER private key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodeDERPrivateKey', function(t) {
-    t.plan(2)
-
     var rawPrivateKey = keyEncoder.encodePrivate(keys.derPrivate, 'der', 'raw')
+    t.equal(typeof rawPrivateKey, "string")
     t.equal(rawPrivateKey, keys.rawPrivate, 'encoded raw private key should match the OpenSSL reference')
 
     var privateKeyPEM = keyEncoder.encodePrivate(keys.derPrivate, 'der', 'pem')
+    t.equal(typeof privateKeyPEM, "string")
     t.equal(privateKeyPEM, keys.pemPrivate, 'encoded PEM private key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodePEMPrivateKey', function(t) {
-    t.plan(2)
-
     var rawPrivateKey = keyEncoder.encodePrivate(keys.pemPrivate, 'pem', 'raw')
+    t.equal(typeof rawPrivateKey, "string")
     t.equal(rawPrivateKey, keys.rawPrivate, 'encoded raw private key should match the OpenSSL reference')
 
     var privateKeyDER = keyEncoder.encodePrivate(keys.pemPrivate, 'pem', 'der')
+    t.equal(typeof privateKeyDER, "string")
     t.equal(privateKeyDER, keys.derPrivate, 'encoded DER private key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodeRawPublicKey', function(t) {
-    t.plan(2)
-
     var publicKeyPEM = keyEncoder.encodePublic(keys.rawPublic, 'raw', 'pem')
+    t.equal(typeof publicKeyPEM, "string")
     t.equal(publicKeyPEM, keys.pemPublic, 'encoded PEM public key should match the OpenSSL reference')
 
     var publicKeyDER = keyEncoder.encodePublic(keys.rawPublic, 'raw', 'der')
+    t.equal(typeof publicKeyDER, "string")
     t.equal(publicKeyDER, keys.derPublic, 'encoded DER public key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodeDERPublicKey', function(t) {
-    t.plan(2)
-
     var rawPublicKey = keyEncoder.encodePublic(keys.derPublic, 'der', 'raw')
+    t.equal(typeof rawPublicKey, "string")
     t.equal(rawPublicKey, keys.rawPublic, 'encoded raw public key should match the OpenSSL reference')
 
     var publicKeyPEM = keyEncoder.encodePublic(keys.derPublic, 'der', 'pem')
+    t.equal(typeof publicKeyPEM, "string")
     t.equal(publicKeyPEM, keys.pemPublic, 'encoded PEM public key should match the OpenSSL reference')
+    t.end()
 })
 
 test('encodePEMPublicKey', function(t) {
-    t.plan(2)
-
     var rawPublicKey = keyEncoder.encodePublic(keys.pemPublic, 'pem', 'raw')
+    t.equal(typeof rawPublicKey, "string");
     t.equal(rawPublicKey, keys.rawPublic, 'encoded raw public key should match the OpenSSL reference')
 
     var publicKeyDER = keyEncoder.encodePublic(keys.pemPublic, 'pem', 'der')
+    t.equal(typeof publicKeyDER, "string")
     t.equal(publicKeyDER, keys.derPublic, 'encoded DER public key should match the OpenSSL reference')
+    t.end()
 })
