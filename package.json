@@ -1,6 +1,6 @@
 {
   "name": "key-encoder",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Library for encoding ECDSA private keys to PEM, DER and raw hex formats",
   "main": "lib/index.js",
   "scripts": {
@@ -56,7 +56,6 @@
   },
   "homepage": "https://github.com/blockstack/key-encoder-js",
   "dependencies": {
-    "@types/bn.js": "^4.11.5",
     "@types/elliptic": "^6.4.9",
     "asn1.js": "^5.0.1",
     "bn.js": "^4.11.8",
