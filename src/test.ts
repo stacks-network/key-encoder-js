@@ -1,5 +1,6 @@
-import test from 'tape'
-import BN from 'bn.js'
+import * as test from 'tape'
+// @ts-ignore
+import * as BN from 'bn.js'
 import KeyEncoder from './index'
 const ECPrivateKeyASN = KeyEncoder.ECPrivateKeyASN
 const SubjectPublicKeyInfoASN = KeyEncoder.SubjectPublicKeyInfoASN

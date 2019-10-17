@@ -1,8 +1,12 @@
-import BN from 'bn.js'
 import { ec as EC } from 'elliptic'
-
 // @ts-ignore
-import asn1 from 'asn1.js'
+import * as asn1 from 'asn1.js'
+const BN = require('bn.js')
+
+/**
+ * Use types for the `bn.js` lib, e.g. `@types/bn.js`
+ */
+type BNjs = any
 
 const ECPrivateKeyASN = asn1.define('ECPrivateKey', function () {
     // @ts-ignore
@@ -44,7 +48,7 @@ const curves: { [index: string]: CurveOptions } = {
 }
 
 interface PrivateKey {
-    version: BN;
+    version: BNjs;
     privateKey: Buffer;
     parameters: number[];
     publicKey?: {
