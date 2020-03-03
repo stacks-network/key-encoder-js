@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/l/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
 [![npm](https://img.shields.io/npm/v/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
 [![npm](https://img.shields.io/npm/dm/key-encoder.svg)](https://www.npmjs.com/package/key-encoder)
-[![Slack](http://slack.blockstack.org/badge.svg)](http://slack.blockstack.org/)
+[![Discord](https://img.shields.io/discord/621759717756370964)](http://chat.blockstack.org/)
 
 ### Installation
 
@@ -19,7 +19,7 @@ To get started, first define your key encoder and raw private/public keys.
 #### SECP256k1 Key Encoders
 
 ```js
-var KeyEncoder = require('key-encoder'),
+var KeyEncoder = require('key-encoder').default
     keyEncoder = new KeyEncoder('secp256k1')
 ```
 
