@@ -47,22 +47,22 @@ var rawPrivateKey = '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c56
 
 ### Encoding Private Keys
 
-Encode to and from raw, PEM, and DER formats.
+Encode to and from raw, PEM (encode to 'pkcs8' and 'pkcs1'), and DER formats.
 
 #### Encoding Private Keys as PEMs
 
 ```js
-var pemPrivateKey = keyEncoder.encodePrivate(rawPrivateKey, 'raw', 'pem')
+var pemPrivateKey = keyEncoder.encodePrivate(rawPrivateKey, 'raw', 'pem', 'pkcs8') //default is 'pkcs1'
 ```
 
 Example output:
 
 ```
------BEGIN EC PRIVATE KEY-----
-MHQCAQEEIIRAVcyhPv14znmkw6TFq6XbDr63rp1WkGwD0zPFZo1boAcGBSuBBAAK
-oUQDQgAEFHt56eHdMyTO6hFf9AN7bId8c3dxMUGL+ytxPv/Q9QIye5I4YVgb1VNe
-6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==
------END EC PRIVATE KEY-----
+-----BEGIN PRIVATE KEY-----
+MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQghEBVzKE+/XjOeaTDpMWr
+pdsOvreunVaQbAPTM8VmjVugBwYFK4EEAAqhRANCAAQUe3np4d0zJM7qEV/0A3ts
+h3xzd3ExQYv7K3E+/9D1AjJ7kjhhWBvVU17q4AZ2Umn0BPX1xSIU6XIbBKp9BAp1
+-----END PRIVATE KEY-----
 ```
 
 #### Encoding Private Keys to DER Format

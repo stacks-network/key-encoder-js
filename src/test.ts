@@ -3,8 +3,8 @@ import * as test from 'tape'
 import * as BN from 'bn.js'
 import KeyEncoder from './index'
 const ECPrivateKeyASN = KeyEncoder.ECPrivateKeyASN
+const ECPrivateKey8ASN = KeyEncoder.ECPrivateKey8ASN
 const SubjectPublicKeyInfoASN = KeyEncoder.SubjectPublicKeyInfoASN
-
 
 const keys = {
     rawPrivate: '844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5b',
@@ -14,6 +14,11 @@ const keys = {
     'oUQDQgAEFHt56eHdMyTO6hFf9AN7bId8c3dxMUGL+ytxPv/Q9QIye5I4YVgb1VNe\n' +
     '6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==\n' +
     '-----END EC PRIVATE KEY-----',
+    pemPrivatePKCS8: '-----BEGIN PRIVATE KEY-----\n' +
+    'MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQghEBVzKE+/XjOeaTDpMWr\n' +
+    'pdsOvreunVaQbAPTM8VmjVugBwYFK4EEAAqhRANCAAQUe3np4d0zJM7qEV/0A3ts\n' +
+    'h3xzd3ExQYv7K3E+/9D1AjJ7kjhhWBvVU17q4AZ2Umn0BPX1xSIU6XIbBKp9BAp1\n' +
+    '-----END PRIVATE KEY-----',
     pemCompactPrivate: '-----BEGIN EC PRIVATE KEY-----\n' +
     'MC4CAQEEIIRAVcyhPv14znmkw6TFq6XbDr63rp1WkGwD0zPFZo1boAcGBSuBBAAK\n' +
     '-----END EC PRIVATE KEY-----',
@@ -22,6 +27,7 @@ const keys = {
     '+ytxPv/Q9QIye5I4YVgb1VNe6uAGdlJp9AT19cUiFOlyGwSqfQQKdQ==\n' +
     '-----END PUBLIC KEY-----',
     derPrivate: '30740201010420844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5ba00706052b8104000aa14403420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75',
+    derPrivatePKCS8: '30818d020100301006072a8648ce3d020106052b8104000a047630740201010420 844055cca13efd78ce79a4c3a4c5aba5db0ebeb7ae9d56906c03d333c5668d5ba00706052b8104000aa14403420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75',
     derPublic: '3056301006072a8648ce3d020106052b8104000a03420004147b79e9e1dd3324ceea115ff4037b6c877c73777131418bfb2b713effd0f502327b923861581bd5535eeae006765269f404f5f5c52214e9721b04aa7d040a75'
 }
 
@@ -49,6 +55,36 @@ test('encodeECPrivateKeyASN', function(t) {
     t.end()
 })
 
+test('encodeECPrivateKey8ASN', function(t) {
+    var secp256k1Parameters = [1, 3, 132, 0, 10],
+        pemOptions =  {label: 'PRIVATE KEY'}
+
+    var privateKey = {
+        version: new BN(1),
+        privateKey: Buffer.from(keys.rawPrivate, 'hex'),
+        parameters: secp256k1Parameters,
+        publicKey: { unused: 0, data: Buffer.from(keys.rawPublic, 'hex') }
+    }
+    var privateKeyObject = {
+        version: new BN(0),
+        privateKeyAlgorithm: {
+            ecPublicKey: [1, 2, 840, 10045, 2, 1],
+            curve: secp256k1Parameters,
+        },
+        privateKey: privateKey,
+    }
+
+    var privateKeyPEM = ECPrivateKey8ASN.encode(privateKeyObject, 'pem', pemOptions)
+    t.equal(privateKeyPEM, keys.pemPrivatePKCS8, 'encoded PEM private key should match the OpenSSL reference')
+
+    var decodedPrivateKeyObject = ECPrivateKey8ASN.decode(privateKeyPEM, 'pem', pemOptions)
+    t.equal(JSON.stringify(privateKeyObject), JSON.stringify(decodedPrivateKeyObject), 'encoded-and-decoded private key object should match the original')
+
+    var openSSLPrivateKeyObject = ECPrivateKey8ASN.decode(keys.pemPrivatePKCS8,'pem',pemOptions)
+    t.equal(JSON.stringify(privateKeyObject), JSON.stringify(openSSLPrivateKeyObject), 'private key object should match the one decoded from the OpenSSL PEM')
+    t.end()
+})
+
 test('encodeSubjectPublicKeyInfoASN', function(t) {
     var secp256k1Parameters = [1, 3, 132, 0, 10],
         pemOptions =  {label: 'PUBLIC KEY'}
@@ -61,7 +97,7 @@ test('encodeSubjectPublicKeyInfoASN', function(t) {
         pub: {
             unused: 0,
             data: Buffer.from(keys.rawPublic, 'hex')
-        }
+        },
     }
 
     var publicKeyPEM = SubjectPublicKeyInfoASN.encode(publicKeyObject, 'pem', pemOptions)
@@ -127,7 +163,7 @@ test('encodeDERPublicKey', function(t) {
 
 test('encodePEMPublicKey', function(t) {
     var rawPublicKey = keyEncoder.encodePublic(keys.pemPublic, 'pem', 'raw')
-    t.equal(typeof rawPublicKey, "string");
+    t.equal(typeof rawPublicKey, "string")
     t.equal(rawPublicKey, keys.rawPublic, 'encoded raw public key should match the OpenSSL reference')
 
     var publicKeyDER = keyEncoder.encodePublic(keys.pemPublic, 'pem', 'der')
