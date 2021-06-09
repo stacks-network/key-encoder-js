@@ -1,16 +1,16 @@
-import { ec as EC } from 'elliptic';
+import { ec as EC } from 'elliptic'
 // @ts-ignore
-import * as asn1 from 'asn1.js';
-const BN = require('bn.js');
+import * as asn1 from 'asn1.js'
+const BN = require('bn.js')
 
 /**
  * Use types for the `bn.js` lib, e.g. `@types/bn.js`
  */
-type BNjs = any;
+type BNjs = any
 
 const ECPrivateKeyASN = asn1.define('ECPrivateKey', function () {
   // @ts-ignore
-  const self = this as any;
+  const self = this as any
   self
     .seq()
     .obj(
@@ -18,12 +18,12 @@ const ECPrivateKeyASN = asn1.define('ECPrivateKey', function () {
       self.key('privateKey').octstr(),
       self.key('parameters').explicit(0).objid().optional(),
       self.key('publicKey').explicit(1).bitstr().optional()
-    );
-});
+    )
+})
 
 const ECPrivateKey8ASN = asn1.define('ECPrivateKey', function () {
   // @ts-ignore
-  const self = this as any;
+  const self = this as any
   self
     .seq()
     .obj(
@@ -34,14 +34,14 @@ const ECPrivateKey8ASN = asn1.define('ECPrivateKey', function () {
         .obj(self.key('ecPublicKey').objid(), self.key('curve').objid()),
       self.key('privateKey').octstr().contains(ECPrivateKeyASN),
       self.key('attributes').explicit(0).bitstr().optional()
-    );
-});
+    )
+})
 
 const SubjectPublicKeyInfoASN = asn1.define(
   'SubjectPublicKeyInfo',
   function () {
     // @ts-ignore
-    const self = this as any;
+    const self = this as any
     self
       .seq()
       .obj(
@@ -50,15 +50,15 @@ const SubjectPublicKeyInfoASN = asn1.define(
           .seq()
           .obj(self.key('id').objid(), self.key('curve').objid()),
         self.key('pub').bitstr()
-      );
+      )
   }
-);
+)
 
 interface CurveOptions {
-  curveParameters: number[];
-  privatePEMOptions: { label: string };
-  publicPEMOptions: { label: string };
-  curve: EC;
+  curveParameters: number[]
+  privatePEMOptions: { label: string }
+  publicPEMOptions: { label: string }
+  curve: EC
 }
 
 const curves: { [index: string]: CurveOptions } = {
@@ -68,43 +68,43 @@ const curves: { [index: string]: CurveOptions } = {
     publicPEMOptions: { label: 'PUBLIC KEY' },
     curve: new EC('secp256k1'),
   },
-};
+}
 
 interface PrivateKeyPKCS1 {
-  version: BNjs;
-  privateKey: Buffer;
-  parameters: number[];
+  version: BNjs
+  privateKey: Buffer
+  parameters: number[]
   publicKey?: {
-    unused: number;
-    data: Buffer;
-  };
+    unused: number
+    data: Buffer
+  }
 }
 
 interface PrivateKeyPKCS8 {
-  version: BNjs;
-  privateKey: PrivateKeyPKCS1;
-  privateKeyAlgorithm: { ecPublicKey: number[]; curve: number[] };
+  version: BNjs
+  privateKey: PrivateKeyPKCS1
+  privateKeyAlgorithm: { ecPublicKey: number[]; curve: number[] }
 }
 
-type KeyFormat = 'raw' | 'pem' | 'der';
+type KeyFormat = 'raw' | 'pem' | 'der'
 
 export default class KeyEncoder {
-  static ECPrivateKeyASN = ECPrivateKeyASN;
-  static ECPrivateKey8ASN = ECPrivateKey8ASN;
-  static SubjectPublicKeyInfoASN = SubjectPublicKeyInfoASN;
+  static ECPrivateKeyASN = ECPrivateKeyASN
+  static ECPrivateKey8ASN = ECPrivateKey8ASN
+  static SubjectPublicKeyInfoASN = SubjectPublicKeyInfoASN
 
-  algorithmID: number[];
-  options: CurveOptions;
+  algorithmID: number[]
+  options: CurveOptions
 
   constructor(options: string | CurveOptions) {
     if (typeof options === 'string') {
       if (options !== 'secp256k1') {
-        throw new Error('Unknown curve ' + options);
+        throw new Error('Unknown curve ' + options)
       }
-      options = curves[options];
+      options = curves[options]
     }
-    this.options = options;
-    this.algorithmID = [1, 2, 840, 10045, 2, 1];
+    this.options = options
+    this.algorithmID = [1, 2, 840, 10045, 2, 1]
   }
 
   private PKCS1toPKCS8(privateKey: PrivateKeyPKCS1): PrivateKeyPKCS8 {
@@ -115,7 +115,7 @@ export default class KeyEncoder {
         ecPublicKey: this.algorithmID,
         curve: privateKey.parameters,
       },
-    };
+    }
   }
 
   privateKeyObject(rawPrivateKey: string, rawPublicKey: string) {
@@ -123,16 +123,16 @@ export default class KeyEncoder {
       version: new BN(1),
       privateKey: Buffer.from(rawPrivateKey, 'hex'),
       parameters: this.options.curveParameters,
-    };
+    }
 
     if (rawPublicKey) {
       privateKeyObject.publicKey = {
         unused: 0,
         data: Buffer.from(rawPublicKey, 'hex'),
-      };
+      }
     }
 
-    return privateKeyObject;
+    return privateKeyObject
   }
 
   publicKeyObject(rawPublicKey: string) {
@@ -145,7 +145,7 @@ export default class KeyEncoder {
         unused: 0,
         data: Buffer.from(rawPublicKey, 'hex'),
       },
-    };
+    }
   }
 
   encodePrivate(
@@ -154,43 +154,43 @@ export default class KeyEncoder {
     destinationFormat: KeyFormat,
     destinationFormatType: 'pkcs8' | 'pkcs1' = 'pkcs1'
   ): string {
-    let privateKeyObject: PrivateKeyPKCS1;
+    let privateKeyObject: PrivateKeyPKCS1
 
     /* Parse the incoming private key and convert it to a private key object */
     if (originalFormat === 'raw') {
       if (typeof privateKey !== 'string') {
-        throw 'private key must be a string';
+        throw 'private key must be a string'
       }
-      let keyPair = this.options.curve.keyFromPrivate(privateKey, 'hex');
-      let rawPublicKey = keyPair.getPublic('hex');
-      privateKeyObject = this.privateKeyObject(privateKey, rawPublicKey);
+      let keyPair = this.options.curve.keyFromPrivate(privateKey, 'hex')
+      let rawPublicKey = keyPair.getPublic('hex')
+      privateKeyObject = this.privateKeyObject(privateKey, rawPublicKey)
     } else if (originalFormat === 'der') {
       if (typeof privateKey !== 'string') {
         // do nothing
       } else if (typeof privateKey === 'string') {
-        privateKey = Buffer.from(privateKey, 'hex');
+        privateKey = Buffer.from(privateKey, 'hex')
       } else {
-        throw 'private key must be a buffer or a string';
+        throw 'private key must be a buffer or a string'
       }
-      privateKeyObject = ECPrivateKeyASN.decode(privateKey, 'der');
+      privateKeyObject = ECPrivateKeyASN.decode(privateKey, 'der')
     } else if (originalFormat === 'pem') {
       if (typeof privateKey !== 'string') {
-        throw 'private key must be a string';
+        throw 'private key must be a string'
       }
       privateKeyObject = ECPrivateKeyASN.decode(
         privateKey,
         'pem',
         this.options.privatePEMOptions
-      );
+      )
     } else {
-      throw 'invalid private key format';
+      throw 'invalid private key format'
     }
 
     /* Export the private key object to the desired format */
     if (destinationFormat === 'raw') {
-      return privateKeyObject.privateKey.toString('hex');
+      return privateKeyObject.privateKey.toString('hex')
     } else if (destinationFormat === 'der') {
-      return ECPrivateKeyASN.encode(privateKeyObject, 'der').toString('hex');
+      return ECPrivateKeyASN.encode(privateKeyObject, 'der').toString('hex')
     } else if (destinationFormat === 'pem') {
       return destinationFormatType === 'pkcs1'
         ? ECPrivateKeyASN.encode(
@@ -201,9 +201,9 @@ export default class KeyEncoder {
         : ECPrivateKey8ASN.encode(this.PKCS1toPKCS8(privateKeyObject), 'pem', {
             ...this.options.privatePEMOptions,
             label: 'PRIVATE KEY',
-          });
+          })
     } else {
-      throw 'invalid destination format for private key';
+      throw 'invalid destination format for private key'
     }
   }
 
@@ -212,51 +212,51 @@ export default class KeyEncoder {
     originalFormat: KeyFormat,
     destinationFormat: KeyFormat
   ): string {
-    let publicKeyObject;
+    let publicKeyObject
 
     /* Parse the incoming public key and convert it to a public key object */
     if (originalFormat === 'raw') {
       if (typeof publicKey !== 'string') {
-        throw 'public key must be a string';
+        throw 'public key must be a string'
       }
-      publicKeyObject = this.publicKeyObject(publicKey);
+      publicKeyObject = this.publicKeyObject(publicKey)
     } else if (originalFormat === 'der') {
       if (typeof publicKey !== 'string') {
         // do nothing
       } else if (typeof publicKey === 'string') {
-        publicKey = Buffer.from(publicKey, 'hex');
+        publicKey = Buffer.from(publicKey, 'hex')
       } else {
-        throw 'public key must be a buffer or a string';
+        throw 'public key must be a buffer or a string'
       }
-      publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKey, 'der');
+      publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKey, 'der')
     } else if (originalFormat === 'pem') {
       if (typeof publicKey !== 'string') {
-        throw 'public key must be a string';
+        throw 'public key must be a string'
       }
       publicKeyObject = SubjectPublicKeyInfoASN.decode(
         publicKey,
         'pem',
         this.options.publicPEMOptions
-      );
+      )
     } else {
-      throw 'invalid public key format';
+      throw 'invalid public key format'
     }
 
     /* Export the private key object to the desired format */
     if (destinationFormat === 'raw') {
-      return publicKeyObject.pub.data.toString('hex');
+      return publicKeyObject.pub.data.toString('hex')
     } else if (destinationFormat === 'der') {
       return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'der').toString(
         'hex'
-      );
+      )
     } else if (destinationFormat === 'pem') {
       return SubjectPublicKeyInfoASN.encode(
         publicKeyObject,
         'pem',
         this.options.publicPEMOptions
-      );
+      )
     } else {
-      throw 'invalid destination format for public key';
+      throw 'invalid destination format for public key'
     }
   }
 }
