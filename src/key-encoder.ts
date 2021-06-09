@@ -49,10 +49,10 @@ const SubjectPublicKeyInfoASN = asn1.define(
 )
 
 interface CurveOptions {
-    curveParameters: number[]
-    privatePEMOptions: { label: string }
-    publicPEMOptions: { label: string }
-    curve: EC
+    curveParameters: number[];
+    privatePEMOptions: { label: string };
+    publicPEMOptions: { label: string };
+    curve: EC;
 }
 
 const curves: { [index: string]: CurveOptions } = {
@@ -60,27 +60,27 @@ const curves: { [index: string]: CurveOptions } = {
         curveParameters: [1, 3, 132, 0, 10],
         privatePEMOptions: { label: 'EC PRIVATE KEY' },
         publicPEMOptions: { label: 'PUBLIC KEY' },
-        curve: new EC('secp256k1'),
-    },
+        curve: new EC('secp256k1')
+    }
 }
 
 interface PrivateKeyPKCS1 {
-    version: BNjs
-    privateKey: Buffer
-    parameters: number[]
+    version: BNjs;
+    privateKey: Buffer;
+    parameters: number[];
     publicKey?: {
-        unused: number
-        data: Buffer
+        unused: number;
+        data: Buffer;
     }
 }
 
 interface PrivateKeyPKCS8 {
-    version: BNjs
-    privateKey: PrivateKeyPKCS1
+    version: BNjs;
+    privateKey: PrivateKeyPKCS1;
     privateKeyAlgorithm: { ecPublicKey: number[]; curve: number[] }
 }
 
-type KeyFormat = 'raw' | 'pem' | 'der'
+type KeyFormat = 'raw' | 'pem' | 'der';
 
 export default class KeyEncoder {
     static ECPrivateKeyASN = ECPrivateKeyASN
@@ -116,13 +116,13 @@ export default class KeyEncoder {
         const privateKeyObject: PrivateKeyPKCS1 = {
             version: new BN(1),
             privateKey: Buffer.from(rawPrivateKey, 'hex'),
-            parameters: this.options.curveParameters,
+            parameters: this.options.curveParameters
         }
 
         if (rawPublicKey) {
             privateKeyObject.publicKey = {
                 unused: 0,
-                data: Buffer.from(rawPublicKey, 'hex'),
+                data: Buffer.from(rawPublicKey, 'hex')
             }
         }
 
@@ -133,11 +133,11 @@ export default class KeyEncoder {
         return {
             algorithm: {
                 id: this.algorithmID,
-                curve: this.options.curveParameters,
+                curve: this.options.curveParameters
             },
             pub: {
                 unused: 0,
-                data: Buffer.from(rawPublicKey, 'hex'),
+                data: Buffer.from(rawPublicKey, 'hex')
             },
         }
     }
@@ -171,11 +171,7 @@ export default class KeyEncoder {
             if (typeof privateKey !== 'string') {
                 throw 'private key must be a string'
             }
-            privateKeyObject = ECPrivateKeyASN.decode(
-                privateKey,
-                'pem',
-                this.options.privatePEMOptions
-            )
+            privateKeyObject = ECPrivateKeyASN.decode(privateKey, 'pem', this.options.privatePEMOptions)
         } else {
             throw 'invalid private key format'
         }
@@ -184,16 +180,10 @@ export default class KeyEncoder {
         if (destinationFormat === 'raw') {
             return privateKeyObject.privateKey.toString('hex')
         } else if (destinationFormat === 'der') {
-            return ECPrivateKeyASN.encode(privateKeyObject, 'der').toString(
-                'hex'
-            )
+            return ECPrivateKeyASN.encode(privateKeyObject, 'der').toString('hex')
         } else if (destinationFormat === 'pem') {
             return destinationFormatType === 'pkcs1'
-                ? ECPrivateKeyASN.encode(
-                      privateKeyObject,
-                      'pem',
-                      this.options.privatePEMOptions
-                  )
+                ? ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.options.privatePEMOptions)
                 : ECPrivateKey8ASN.encode(
                       this.PKCS1toPKCS8(privateKeyObject),
                       'pem',
@@ -207,11 +197,7 @@ export default class KeyEncoder {
         }
     }
 
-    encodePublic(
-        publicKey: string | Buffer,
-        originalFormat: KeyFormat,
-        destinationFormat: KeyFormat
-    ): string {
+    encodePublic(publicKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat): string {
         let publicKeyObject
 
         /* Parse the incoming public key and convert it to a public key object */
@@ -233,11 +219,7 @@ export default class KeyEncoder {
             if (typeof publicKey !== 'string') {
                 throw 'public key must be a string'
             }
-            publicKeyObject = SubjectPublicKeyInfoASN.decode(
-                publicKey,
-                'pem',
-                this.options.publicPEMOptions
-            )
+            publicKeyObject = SubjectPublicKeyInfoASN.decode(publicKey, 'pem', this.options.publicPEMOptions)
         } else {
             throw 'invalid public key format'
         }
@@ -246,16 +228,9 @@ export default class KeyEncoder {
         if (destinationFormat === 'raw') {
             return publicKeyObject.pub.data.toString('hex')
         } else if (destinationFormat === 'der') {
-            return SubjectPublicKeyInfoASN.encode(
-                publicKeyObject,
-                'der'
-            ).toString('hex')
+            return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'der').toString('hex')
         } else if (destinationFormat === 'pem') {
-            return SubjectPublicKeyInfoASN.encode(
-                publicKeyObject,
-                'pem',
-                this.options.publicPEMOptions
-            )
+            return SubjectPublicKeyInfoASN.encode(publicKeyObject, 'pem', this.options.publicPEMOptions)
         } else {
             throw 'invalid destination format for public key'
         }
