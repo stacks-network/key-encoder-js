@@ -33,20 +33,17 @@ const ECPrivateKey8ASN = asn1.define('ECPrivateKey', function () {
     )
 })
 
-const SubjectPublicKeyInfoASN = asn1.define(
-    'SubjectPublicKeyInfo',
-    function () {
-        // @ts-ignore
-        const self = this as any
-        self.seq().obj(
-            self
-                .key('algorithm')
-                .seq()
-                .obj(self.key('id').objid(), self.key('curve').objid()),
-            self.key('pub').bitstr()
-        )
-    }
-)
+const SubjectPublicKeyInfoASN = asn1.define('SubjectPublicKeyInfo', function () {
+    // @ts-ignore
+    const self = this as any
+    self.seq().obj(
+        self
+            .key('algorithm')
+            .seq()
+            .obj(self.key('id').objid(), self.key('curve').objid()),
+        self.key('pub').bitstr()
+    )
+})
 
 interface CurveOptions {
     curveParameters: number[];
@@ -107,7 +104,7 @@ export default class KeyEncoder {
             privateKey: privateKey,
             privateKeyAlgorithm: {
                 ecPublicKey: this.algorithmID,
-                curve: privateKey.parameters,
+                curve: privateKey.parameters
             },
         }
     }
@@ -138,7 +135,7 @@ export default class KeyEncoder {
             pub: {
                 unused: 0,
                 data: Buffer.from(rawPublicKey, 'hex')
-            },
+            }
         }
     }
 
