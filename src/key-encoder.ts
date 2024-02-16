@@ -19,14 +19,28 @@ const ECPrivateKeyASN = asn1.define('ECPrivateKey', function () {
     )
 })
 
+const ECPrivateKey8ASN = asn1.define('ECPrivateKey', function () {
+    // @ts-ignore
+    const self = this as any
+    self.seq().obj(
+        self.key('version').int(),
+        self
+            .key('privateKeyAlgorithm')
+            .seq()
+            .obj(self.key('ecPublicKey').objid(), self.key('curve').objid()),
+        self.key('privateKey').octstr().contains(ECPrivateKeyASN),
+        self.key('attributes').explicit(0).bitstr().optional()
+    )
+})
+
 const SubjectPublicKeyInfoASN = asn1.define('SubjectPublicKeyInfo', function () {
     // @ts-ignore
     const self = this as any
     self.seq().obj(
-        self.key('algorithm').seq().obj(
-            self.key("id").objid(),
-            self.key("curve").objid()
-        ),
+        self
+            .key('algorithm')
+            .seq()
+            .obj(self.key('id').objid(), self.key('curve').objid()),
         self.key('pub').bitstr()
     )
 })
@@ -47,7 +61,7 @@ const curves: { [index: string]: CurveOptions } = {
     }
 }
 
-interface PrivateKey {
+interface PrivateKeyPKCS1 {
     version: BNjs;
     privateKey: Buffer;
     parameters: number[];
@@ -57,10 +71,17 @@ interface PrivateKey {
     }
 }
 
+interface PrivateKeyPKCS8 {
+    version: BNjs;
+    privateKey: PrivateKeyPKCS1;
+    privateKeyAlgorithm: { ecPublicKey: number[]; curve: number[] }
+}
+
 type KeyFormat = 'raw' | 'pem' | 'der';
 
 export default class KeyEncoder {
     static ECPrivateKeyASN = ECPrivateKeyASN
+    static ECPrivateKey8ASN = ECPrivateKey8ASN
     static SubjectPublicKeyInfoASN = SubjectPublicKeyInfoASN
 
     algorithmID: number[]
@@ -77,8 +98,19 @@ export default class KeyEncoder {
         this.algorithmID = [1, 2, 840, 10045, 2, 1]
     }
 
+    private PKCS1toPKCS8(privateKey: PrivateKeyPKCS1): PrivateKeyPKCS8 {
+        return {
+            version: new BN(0),
+            privateKey: privateKey,
+            privateKeyAlgorithm: {
+                ecPublicKey: this.algorithmID,
+                curve: privateKey.parameters
+            },
+        }
+    }
+
     privateKeyObject(rawPrivateKey: string, rawPublicKey: string) {
-        const privateKeyObject: PrivateKey = {
+        const privateKeyObject: PrivateKeyPKCS1 = {
             version: new BN(1),
             privateKey: Buffer.from(rawPrivateKey, 'hex'),
             parameters: this.options.curveParameters
@@ -107,8 +139,13 @@ export default class KeyEncoder {
         }
     }
 
-    encodePrivate(privateKey: string | Buffer, originalFormat: KeyFormat, destinationFormat: KeyFormat): string {
-        let privateKeyObject: PrivateKey
+    encodePrivate(
+        privateKey: string | Buffer,
+        originalFormat: KeyFormat,
+        destinationFormat: KeyFormat,
+        destinationFormatType: 'pkcs8' | 'pkcs1' = 'pkcs1'
+    ): string {
+        let privateKeyObject: PrivateKeyPKCS1
 
         /* Parse the incoming private key and convert it to a private key object */
         if (originalFormat === 'raw') {
@@ -142,7 +179,16 @@ export default class KeyEncoder {
         } else if (destinationFormat === 'der') {
             return ECPrivateKeyASN.encode(privateKeyObject, 'der').toString('hex')
         } else if (destinationFormat === 'pem') {
-            return ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.options.privatePEMOptions)
+            return destinationFormatType === 'pkcs1'
+                ? ECPrivateKeyASN.encode(privateKeyObject, 'pem', this.options.privatePEMOptions)
+                : ECPrivateKey8ASN.encode(
+                      this.PKCS1toPKCS8(privateKeyObject),
+                      'pem',
+                      {
+                          ...this.options.privatePEMOptions,
+                          label: 'PRIVATE KEY',
+                      }
+                  )
         } else {
             throw 'invalid destination format for private key'
         }
